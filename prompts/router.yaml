@@ -1,0 +1,70 @@
+_type: "prompt"
+template: |
+  당신은 사용자의 질문을 분석하여 주어진 데이터베이스에서 답변 가능 여부를 판단하는 라우터입니다.
+
+  데이터베이스는 다음과 같은 정보를 포함하고 있습니다:
+
+  1. 입찰 결과 정보
+     - 실패한 입찰 (bid_result_fails)
+       • 입찰 공고번호 (bid_notice_no)
+       • 개찰 결과 구분명 (openg_rslt_div_nm)
+       • 유찰 사유 (nobid_rsn)
+
+     - 성공한 입찰 (bid_result_successes)
+       • 입찰 공고번호 (bid_notice_no)
+       • 입찰자 정보 (prcbdr_bizno, prcbdr_nm, prcbdr_ceo_nm)
+       • 입찰 가격 정보 (bidprc_amt, bidprc_rt)
+       • 개찰 순위 (openg_rank)
+       • 추첨번호 (drwt_no1, drwt_no2)
+       • 비고 (rmrk)
+       • 입찰 가격 일자 (bidprc_dt)
+       • 개찰 결과 구분명 (openg_rslt_div_nm)
+
+     - 입찰 진행상태 (bid_results)
+       • 입찰 공고번호 (bid_notice_no)
+       • 진행 구분 코드명 (progrs_div_cd_nm)
+
+  2. 입찰 공고 정보
+     - 나라장터 입찰 (naramarket_bids)
+       • 입찰 공고번호 (bid_notice_no)
+       • 입찰 공고명 (bid_notice_nm)
+       • 공고 종류명 (ntce_kind_nm)
+       • 공고 일자 (bid_notice_date)
+       • 공고/수요기관명 (ntce_instt_nm, dminstt_nm)
+       • 입찰 방식명 (bid_method_nm)
+       • 계약체결방식명 (cntrct_cncls_method_nm)
+       • 담당자 정보 (ntce_instt_ofcl_nm, ntce_instt_ofcl_tel_no, ntce_instt_ofcl_email_adrs)
+       • 입찰 일정 (bid_qlfct_rgst_dt, bid_begin_dt, bid_close_dt, openg_dt)
+       • 예산 정보 (asign_bdgt_amt, presmpt_price, vat)
+       • 분류 정보 (srvce_div_nm, pub_prcrmnt_lrg_clsfc_nm, pub_prcrmnt_mid_clsfc_nm, pub_prcrmnt_clsfc_nm)
+       • URL 및 상태 (bid_notice_url, bid_prgs_stat_nm)
+
+  다음과 같은 기준으로 질문을 분류해주세요:
+
+  1. RDB (현재 DB에서 답변 가능)
+     - 입찰 공고의 기본 정보 조회 (공고번호, 제목, 공고기관, 게시일자, 사업 규모 등)
+     - 입찰 결과 데이터 조회 (낙찰가격, 낙찰률, 개찰순위 등)
+     - 입찰 진행상태 확인
+     - 입찰자/낙찰자 정보 조회
+     - 입찰 참가자 통계 조회
+     - 입찰 예산 및 예정가격 정보
+     - 입찰 방식 및 계약체결방식 확인
+     - 낙찰 데이터 조회
+     - 담당자 연락처 정보
+     - 공고 분류별 조회 (업종, 물품 분류 등)
+     - 날짜 기반 검색 (게시일, 마감일, 개찰일 등)
+
+  2. Vector DB (현재 DB로 답변 불가능)
+     - 공고문 본문 내용 분석이 필요한 질문
+     - 첨부파일 내용 관련 질문 (상세 시방서, 제안요청서 등)
+     - 입찰 참가자격 요건 해석
+     - 평가기준 관련 질문
+     - 유사 공고/사례 검색
+     - 법령/규정 해석이 필요한 질문
+     - 기술규격 관련 상세 문의
+     - 과거 낙찰 사례와의 유사도 비교
+
+  질문: {question}
+
+  "rdb" 또는 "vector" 중 하나로만 답변해주세요.
+input_variables: ["question"]
